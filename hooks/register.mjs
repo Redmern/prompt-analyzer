@@ -159,8 +159,8 @@ const nothing = (Text, text) => h(Text, { color: 'subtle' }, `  ${text}`)
 
 // ── tabs of a finished review ────────────────────────────────────────────────
 
-// 1 review: what the prompt asks, and what holds it back.
-function reviewTab(Text, v, width) {
+// 1 review: what the prompt asks, what holds it back, and the rewrite.
+function reviewTab(Box, Text, v, width) {
   const a = v.analysis
   const rows = []
   if (a.task) rows.push(h(Text, { color: 'subtle', wrap: 'wrap' }, `task: ${a.task}`))
@@ -171,6 +171,13 @@ function reviewTab(Text, v, width) {
     rows.push(
       h(Text, { wrap: 'wrap' }, h(Text, { color: SEVERITY_COLOR[issue.severity] }, ` ● ${issue.severity.padEnd(6)} `), h(Text, null, issue.problem)),
       ...(issue.fix ? [h(Text, { color: 'subtle', wrap: 'wrap' }, `           → ${issue.fix}`)] : []),
+    )
+  }
+  if (a.improved) {
+    rows.push(
+      h(Text, null, ' '),
+      section(Text, 'improved prompt', 'i puts it in the prompt box'),
+      h(Box, { key: 'improved', borderStyle: 'round', borderColor: 'suggestion', paddingX: 1, flexDirection: 'column' }, h(Text, { wrap: 'wrap' }, a.improved)),
     )
   }
   return rows
@@ -304,7 +311,7 @@ function body(Box, Text, Button, v, width, current, select) {
           ? improvedTab(Box, Text, v)
           : active === 'tokens'
             ? tokensTab(Text, v.prompt, width)
-            : reviewTab(Text, v, width)
+            : reviewTab(Box, Text, v, width)
   return [...above, scoreLine(Text, v.analysis), h(Text, null, ' '), ...tabBar(Box, Text, Button, tabs, active, select, width), ...content]
 }
 

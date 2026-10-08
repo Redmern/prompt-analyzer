@@ -1,6 +1,6 @@
 {
   "name": "prompt-analyzer",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Review a prompt before you send it: quality score, unclear wording, missing context, skills to use, and an improved version",
   "author": {
     "name": "Redmern",

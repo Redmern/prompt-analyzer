@@ -111,9 +111,11 @@ test('/pa <prompt> reviews that text and shows the review', async ($, on) => {
   for (const surface of ['terminal', 'desktop'] as const) {
     const ui = await mount($, surface)
     const body = async () => (await ui.find({ key: 'body' }))?.text ?? ''
-    // The score stays above the tabs; the review tab opens first.
+    // The score stays above the tabs; the review tab opens first, with the
+    // improved prompt under the issues.
     expect(await body()).toContain('4/10')
     expect(await body()).toContain('Which login bug is unclear')
+    expect((await ui.find({ key: 'improved' }))?.text).toContain('regression test')
     await ui.press({ key: 'tab:wording' })
     expect(await body()).toContain('find the cause and fix it')
     expect(await body()).toContain('4/10')
