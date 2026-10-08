@@ -1,7 +1,8 @@
 // /pa reviews a prompt before you send it: a quality score, unclear wording,
 // missing context, skills that would help, and an improved version that one
 // key puts in the prompt box. Each review is one separate model call (Haiku by
-// default), so it never enters your conversation's context.
+// default), so it never enters your conversation's context. While the pane is
+// closed the plugin does nothing: its prompt hooks pass straight through.
 import { atom, read, update } from 'claude-code'
 import { buildRequest, parseAnalysis, plainRules, systemPrompt } from '../lib/analysis.mjs'
 import { createTokenizer } from '../lib/bpe.mjs'
@@ -330,8 +331,9 @@ export function register(on, options) {
     return { text: v.status === 'done' ? `reviewed: ${v.analysis.score}/10, details in the pane` : 'review failed, see the pane' }
   })
 
-  // What you type, so a can review it.
+  // What you type, so a can review it; only while the pane is open.
   on('prompt.edit', async ($, e, next) => {
+    if (!shown) return next(e)
     const box = await next(e)
     if (box.text !== draft) {
       draft = box.text
@@ -341,6 +343,7 @@ export function register(on, options) {
   }).catch(($, e, next) => next(e))
 
   on('prompt.submit', async ($, e, next) => {
+    if (!shown) return next(e)
     draft = ''
     if (shown) $.ui.invalidate('ui.render')
     return next(e)
