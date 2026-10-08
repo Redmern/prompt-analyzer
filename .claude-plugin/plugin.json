@@ -1,0 +1,31 @@
+{
+  "name": "prompt-analyzer",
+  "version": "0.2.0",
+  "description": "Review a prompt before you send it: quality score, unclear wording, missing context, skills to use, and an improved version",
+  "author": {
+    "name": "Redmern",
+    "url": "https://github.com/Redmern"
+  },
+  "license": "MIT",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "MODEL": {
+      "type": "string",
+      "title": "Analysis model",
+      "description": "Model that reviews your prompts: an alias (haiku, sonnet, opus) or a full model id. Each analysis is one separate call; it never enters your conversation.",
+      "default": "haiku"
+    },
+    "INCLUDE_CONVERSATION": {
+      "type": "boolean",
+      "title": "Send recent conversation",
+      "description": "Give the reviewer the last few messages, so it can tell whether \"it\" or \"that bug\" is clear from context.",
+      "default": true
+    },
+    "PLAIN": {
+      "type": "boolean",
+      "title": "Explain in plain English (/plain)",
+      "description": "Write the review's explanations with the rules of the /plain skill (Simplified Technical English), when that skill is installed. The improved prompt keeps your own voice.",
+      "default": true
+    }
+  }
+}
